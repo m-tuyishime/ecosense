@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "LiquidCrystal_I2C.h"
 #include "LightSensor.h"
 #include "SoilHumiditySensor.h"
@@ -9,7 +10,7 @@
 class LCD
 {
 private:
-    LiquidCrystal_I2C lcd;
+    LiquidCrystal_I2C lcd; 
     LightSensor lightSensor;
     SoilHumiditySensor soilHumiditySensor;
     TempSensor tempSensor;

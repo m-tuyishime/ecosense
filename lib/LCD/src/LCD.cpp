@@ -1,19 +1,19 @@
 #include "LCD.h"
 
-LCD::LCD(LightSensor lightSensor, SoilHumiditySensor soilHumiditySensor, TempSensor tempSensor) {
-    LCD(lightSensor, soilHumiditySensor); // call the constructor with the light sensor and soil humidity sensor
+LCD::LCD(LightSensor lightSensor, SoilHumiditySensor soilHumiditySensor, TempSensor tempSensor) 
+    : LCD(lightSensor, soilHumiditySensor) // call the constructor with the light sensor and soil humidity sensor
+{
     this->tempSensor = tempSensor; // set the temperature sensor
 }
 
-LCD::LCD(LightSensor lightSensor, SoilHumiditySensor soilHumiditySensor) {
-    LiquidCrystal_I2C lcd(0x27, 16, 2); // set the address of the lcd, the number of columns and rows
-    this->lcd = lcd; // set the lcd
+LCD::LCD(LightSensor lightSensor, SoilHumiditySensor soilHumiditySensor) 
+    : lcd(0x27, 16, 2), // set the lcd address and size
+    lightSensor(lightSensor), // set the light sensor
+    soilHumiditySensor(soilHumiditySensor) // set the soil humidity sensor
+{
     this->lcd.init(); // initialize the lcd
     this->lcd.clear(); // clear the lcd
     this->lcd.backlight(); // turn on the backlight
-
-    this->lightSensor = lightSensor; // set the light sensor
-    this->soilHumiditySensor = soilHumiditySensor; // set the soil humidity sensor
 }
 
 
@@ -43,12 +43,12 @@ void LCD::printSensors(int count) {
 void LCD::printDetails() {
     // Sensor sensors[] = {lightSensor, soilHumiditySensor, tempSensor}; ///////////////////////////////////////////////////////////////////////////////////////////
     Sensor sensors[] = {lightSensor, soilHumiditySensor}; 
-    for (sensor : sensors) { // loop through the sensors
+    for (Sensor sensor : sensors) { // loop through the sensors
         if (sensor.isCritical()) {
             lcd.clear(); // clear the lcd
-            String[] messages = sensor.printCritical(); // get the critical messages
-            printLCD(messages[0], 0); // print the first message on the first row
-            printLCD(messages[1], 1); // print the second message on the second row
+            StringArray2 messages = sensor.printCritical(); // get the critical messages
+            printLCD(messages.arr[0], 0); // print the first message on the first row
+            printLCD(messages.arr[1], 1); // print the second message on the second row
             delay(1000); // wait for a second
         }
     }

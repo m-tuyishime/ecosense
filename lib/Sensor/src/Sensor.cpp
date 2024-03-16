@@ -6,15 +6,15 @@ Sensor::Sensor(uint8_t pin, String name) {
 }
 
 // return 2 messages for LCD rows
-String[] Sensor::printCritical() {
-    String[] criticalValues; // create array of 2 strings
-    criticalValues[0] = this->name + ": " + this->readSensor(); // first message (ex. "Light: 50%")
-    int8_t status = this->isCritical() // check if value is critical
+StringArray2 Sensor::printCritical() {
+    StringArray2 criticalValues; // create array of 2 strings
+    criticalValues.arr[0] = this->name + ": " + this->readSensor(); // first message (ex. "Light: 50%")
+    int8_t status = this->isCritical(); // check if value is critical
     if (status == 1) // if value is below lowCritPerc
-        criticalValues[1] = "Reduce to " // second message (ex. "Reduce to 50% - 80%")
+        criticalValues.arr[1] = "Reduce to "; // second message (ex. "Reduce to 50% - 80%")
     else
-        criticalValues[1] = "Increase to " // second message (ex. "Increase to 50% - 80%")
-    criticalValues[1] += String(this->lowCritPerc) + "% - " + String(this->highCritPerc) + "%"; // add lowCritPerc and highCritPerc range to second message
+        criticalValues.arr[1] = "Increase to "; // second message (ex. "Increase to 50% - 80%")
+    criticalValues.arr[1] += String(this->lowCritPerc) + "% - " + String(this->highCritPerc) + "%"; // add lowCritPerc and highCritPerc range to second message
     return criticalValues;
 }
 
@@ -47,4 +47,9 @@ String Sensor::readSensor() {
     value = this->formatValue(value); // format value
     value = map(value, this->minValue, this->maxValue, 0, 100); // map value to percentage
     return String(value) + "%";
+}
+
+// read from sensor
+uint16_t Sensor::analogRead() {
+    return ::analogRead(this->pin); // read from analog pin
 }

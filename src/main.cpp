@@ -28,15 +28,15 @@
 /***********************************************************************************/
 // Global variables
 
-LightSensor lightSensor(LIGHT_C); // light sensor
-SoilHumiditySensor soilHumiditySensor(SOIL_C); // soil humidity sensor
+LightSensor lightSensor(0); // light sensor
+SoilHumiditySensor soilHumiditySensor(5); // soil humidity sensor
 // TempSensor tempSensor(DHT_C); // temperature sensor ///////////////////////////////////////////////////////////////////////////////////////////
 LCD lcd(lightSensor, soilHumiditySensor); // LCD 16X2 I2C
 /***********************************************************************************/
 // Setup
 
 void setup() {
-   
+   Serial.begin(9600); // start serial communication
 }
 /***********************************************************************************/
 // Loop
