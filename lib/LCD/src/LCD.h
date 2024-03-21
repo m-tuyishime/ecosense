@@ -14,7 +14,7 @@ private:
 public:
     LCD(); // constructor
     void init(); // initialize the LCD
-    void print(String message, uint8_t row); // print the message on a specific row of the LCD
+    void print(String message, bool row); // print the message on a specific row of the LCD
     void clear(); // clear the LCD
 };
 

@@ -18,7 +18,7 @@ void LCD::init() {
 
 
 // print the message on a specific row of the LCD
-void LCD::print(String message, uint8_t row) {
+void LCD::print(String message, bool row) {
     delay(3000); // wait for a second
     if (message.length() > 16) 
         Serial.println("Error: message is too long");
