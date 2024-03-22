@@ -7,7 +7,8 @@ class SoilHumiditySensor : public Sensor
 {
 private:
 public:
-    SoilHumiditySensor(uint8_t pin);
+    SoilHumiditySensor(); // default constructor
+    void init(byte pin, Range<byte> critPercRange); // initialize sensor
 };
 
 

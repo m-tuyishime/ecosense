@@ -1,55 +1,50 @@
 #include "Sensor.h"
 
-Sensor::Sensor(uint8_t pin, String name) {
+// constructor
+Sensor::Sensor() : minMaxRange(0, 0), critPercRange(0, 0) {} // constructor with default values (0, 0, 0, 0)
+
+// initialize sensor
+void Sensor::init(byte pin, String name, String shortName, Range<int> minMaxRange, Range<byte> critPercRange)
+{
     this->pin = pin; // set analog pin
     this->name = name; // set sensor name
+    this->shortName = shortName; // set sensor short name
+    this->critPercRange = critPercRange; // set critical percentage range
+    this->minMaxRange = minMaxRange; // set min and max values
 }
 
 // return 2 messages for LCD rows
-StringArray2 Sensor::printCritical() {
+StringArray2 Sensor::getCritMessages() {
     StringArray2 criticalValues; // create array of 2 strings
     criticalValues.arr[0] = this->name + ": " + this->readSensor(); // first message (ex. "Light: 50%")
-    int8_t status = this->isCritical(); // check if value is critical
-    if (status == 1) // if value is below lowCritPerc
+    State status = this->isCritical(); // check if value is critical
+    if (status == State::TOO_HIGH) // if value is below lowCritPerc
         criticalValues.arr[1] = "Reduce to "; // second message (ex. "Reduce to 50% - 80%")
     else
         criticalValues.arr[1] = "Increase to "; // second message (ex. "Increase to 50% - 80%")
-    criticalValues.arr[1] += String(this->lowCritPerc) + "% - " + String(this->highCritPerc) + "%"; // add lowCritPerc and highCritPerc range to second message
+    criticalValues.arr[1] += String(this->critPercRange.getMinValue()) + "% - " + String(this->critPercRange.getMaxValue()) + "%"; // add critical percentage range to second message
     return criticalValues;
 }
 
-// format sensor value to account for min and max values
-uint16_t Sensor::formatValue(uint16_t value) {
-    if (value < this->minValue) { // if value is below minimum value
-        Serial.println("Calibration: " + this->name + " value (" + String(value) + ") is below minimum value (" + String(this->minValue) + ")"); // print error message
-        value = this->minValue; // set value to minimum value
-    } else if (value > this->maxValue) { // if value is above maximum value
-        Serial.println("Calibration: " + this->name + " value (" + String(value) + ") is above maximum value (" + String(this->maxValue) + ")");
-        value = this->maxValue; // set value to maximum value
-    }
-    return value;
-}
 
-// check if value is outside of lowCritPerc and highCritPerc range (1: low, 0: high, -1: normal)
-int8_t Sensor::isCritical() {
-    uint16_t value = this->analogRead();
-    value = this->formatValue(value);
-    if (map(value, this->minValue, this->maxValue, 0, 100) < this->lowCritPerc) // if value is below lowCritPerc
-        return 1;
-    else if (map(value, this->minValue, this->maxValue, 0, 100) > this->highCritPerc) // if value is above highCritPerc
-        return 0;
-    return -1; // if value is within lowCritPerc and highCritPerc
+// check if value is outside of range (TOO_LOW, TOO_HIGH, NORMAL)
+State Sensor::isCritical() {
+    int value = analogRead(this->pin); // read from sensor
+    value = this->minMaxRange.formatValue(this->name, value); // format value to account for min and max values
+    if (map(value, this->minMaxRange.getMinValue(), this->minMaxRange.getMaxValue(), 0, 100) < this->critPercRange.getMinValue()) // if value is below lowCritPerc
+        return State::TOO_LOW;
+    else if (map(value, this->minMaxRange.getMinValue(), this->minMaxRange.getMaxValue(), 0, 100) > this->critPercRange.getMaxValue()) // if value is above highCritPerc
+        return State::TOO_HIGH;
+    else
+        return State::NORMAL;
 }
 
 // read from sensor and return formatted value (% | °C) as string
 String Sensor::readSensor() {
-    uint16_t value = this->analogRead(); // read from sensor
-    value = this->formatValue(value); // format value
-    value = map(value, this->minValue, this->maxValue, 0, 100); // map value to percentage
+    int value = analogRead(this->pin); // read from sensor
+    value = this->minMaxRange.formatValue(this->name, value); // format value to account for min and max values
+    value = map(value, this->minMaxRange.getMinValue(), this->minMaxRange.getMaxValue(), 0, 100); // map value to 0-100 range
+    Serial.println(this->name + " value: " + String(value) + "%"); // print value
     return String(value) + "%";
 }
 
-// read from sensor
-uint16_t Sensor::analogRead() {
-    return ::analogRead(this->pin); // read from analog pin
-}
