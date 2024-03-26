@@ -13,7 +13,6 @@ private:
     hd44780_I2Cexp lcd; // LCD object
 public:
     LCD(); // constructor
-    void init(); // initialize the LCD
     void print(String message, bool row); // print the message on a specific row of the LCD
     void clear(); // clear the LCD
 };

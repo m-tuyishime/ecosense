@@ -1,12 +1,6 @@
 #include "LCD.h"
 
-LCD::LCD()
-{
-    
-}
-
-// initialize the LCD
-void LCD::init() {
+LCD::LCD() {
     hd44780_I2Cexp lcd; // LCD object
     this->lcd = lcd;
     int status = this->lcd.begin(16, 2); // initialize the LCD with 16 columns and 2 rows

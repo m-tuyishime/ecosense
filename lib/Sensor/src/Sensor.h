@@ -26,9 +26,8 @@ protected:
     String shortName; // sensor short name
     Range<int> minMaxRange; // min and max values
     Range<byte> critPercRange; // low and high critical percentage range
-    Sensor(); // constructor
+    Sensor(byte pin, String name, String shortName, Range<int> minMaxRange, Range<byte> critPercRange); // protected constructor (not to be used directly)
 public:
-    void init(byte pin, String name, String shortName, Range<int> minMaxRange, Range<byte> critPercRange); // initialize sensor
     String readSensor(); // read from sensor and return formatted value (% | °C) as string
     State isCritical(); // check if value is outside of range (TOO_LOW, TOO_HIGH, NORMAL)
     StringArray2 getCritMessages(); // return 2 messages for LCD rows

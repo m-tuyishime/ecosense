@@ -7,8 +7,7 @@ class SoilHumiditySensor : public Sensor
 {
 private:
 public:
-    SoilHumiditySensor(); // default constructor
-    void init(byte pin, Range<byte> critPercRange); // initialize sensor
+    SoilHumiditySensor(byte pin, Range<byte> critPercRange); // constructor
 };
 
 

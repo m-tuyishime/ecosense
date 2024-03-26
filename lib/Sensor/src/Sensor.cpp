@@ -1,22 +1,13 @@
 #include "Sensor.h"
 
 // constructor
-Sensor::Sensor() : minMaxRange(0, 0), critPercRange(0, 0) {} // constructor with default values (0, 0, 0, 0)
-
-// initialize sensor
-void Sensor::init(byte pin, String name, String shortName, Range<int> minMaxRange, Range<byte> critPercRange)
-{
-    this->pin = pin; // set analog pin
-    this->name = name; // set sensor name
-    this->shortName = shortName; // set sensor short name
-    this->critPercRange = critPercRange; // set critical percentage range
-    this->minMaxRange = minMaxRange; // set min and max values
-}
+Sensor::Sensor(byte pin, String name, String shortName, Range<int> minMaxRange, Range<byte> critPercRange) : 
+    pin(pin), name(name), shortName(shortName), minMaxRange(minMaxRange), critPercRange(critPercRange) {} // sets all properties values of the sensor
 
 // return 2 messages for LCD rows
 StringArray2 Sensor::getCritMessages() {
     StringArray2 criticalValues; // create array of 2 strings
-    criticalValues.arr[0] = this->name + ": " + this->readSensor(); // first message (ex. "Light: 50%")
+    criticalValues.arr[0] = this->shortName + ": " + this->readSensor(); // first message (ex. "Light: 50%")
     State status = this->isCritical(); // check if value is critical
     if (status == State::TOO_HIGH) // if value is below lowCritPerc
         criticalValues.arr[1] = "Reduce to "; // second message (ex. "Reduce to 50% - 80%")

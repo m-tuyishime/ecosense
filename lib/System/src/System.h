@@ -3,7 +3,6 @@
 #include <Sensor.h>
 #include <LightSensor.h>
 #include <SoilHumiditySensor.h>
-#include <TempSensor.h>
 
 #ifndef System_H
 #define System_H
@@ -14,7 +13,7 @@ private:
     Sensor sensors[4];
 
 public:
-    System(LightSensor lightSensor, SoilHumiditySensor soilHumiditySensor, TempSensor tempSensor);
+    System(LightSensor lightSensor, SoilHumiditySensor soilHumiditySensor);
     void printSensors(int count); // print the values of the sensors on the LCD in real time for count + 1 seconds
     void printDetails(); // print the details of critical values on the LCD
 };
