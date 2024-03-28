@@ -34,16 +34,3 @@ State AirTempSensor::isCritical()
         return State::NORMAL;
 }
 
-// return 2 messages for LCD rows
-StringArray2 AirTempSensor::getCritMessages()
-{
-    StringArray2 criticalValues; // create array of 2 strings
-    criticalValues.arr[0] = this->shortName + ": " + this->readSensor(); // first message (ex. "Temp: 50°C")
-    State status = this->isCritical(); // check if value is critical
-    if (status == State::TOO_HIGH) // if value is below lowCritPerc
-        criticalValues.arr[1] = "Reduce to "; // second message (ex. "Reduce to 20°C - 30°C")
-    else
-        criticalValues.arr[1] = "Increase to "; // second message (ex. "Increase to 20°C - 30°C")
-    criticalValues.arr[1] += String(this->critPercRange.getMinValue()) + "°C - " + String(this->critPercRange.getMaxValue()) + "°C"; // add critical percentage range to second message
-    return criticalValues;
-}

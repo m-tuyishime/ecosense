@@ -7,13 +7,16 @@ Sensor::Sensor(byte pin, String name, String shortName, Range<int> minMaxRange, 
 // return 2 messages for LCD rows
 StringArray2 Sensor::getCritMessages() {
     StringArray2 criticalValues; // create array of 2 strings
-    criticalValues.arr[0] = this->shortName + ": " + this->readSensor(); // first message (ex. "Light: 50%")
+    String sign = this->shortName == "AIR_T" ? "°C" : "%"; // set sign to "°C" if shortName is "AIR_T" else set to "%"
+    criticalValues.arr[0] = this->name + ": " + this->readSensor(); // first message (ex. "Light: 50%")
     State status = this->isCritical(); // check if value is critical
-    if (status == State::TOO_HIGH) // if value is below lowCritPerc
+    if (status == State::NORMAL) // if value is normal
+        return {"", ""}; // return empty strings
+    else if (status == State::TOO_HIGH) // if value is below lowCritPerc
         criticalValues.arr[1] = "Reduce to "; // second message (ex. "Reduce to 50% - 80%")
     else
         criticalValues.arr[1] = "Increase to "; // second message (ex. "Increase to 50% - 80%")
-    criticalValues.arr[1] += String(this->critPercRange.getMinValue()) + "% - " + String(this->critPercRange.getMaxValue()) + "%"; // add critical percentage range to second message
+    criticalValues.arr[1] += String(this->critPercRange.getMinValue()) + sign + " - " + String(this->critPercRange.getMaxValue()) + sign; // add critical percentage range to second message
     return criticalValues;
 }
 
@@ -35,7 +38,7 @@ String Sensor::readSensor() {
     int value = analogRead(this->pin); // read from sensor
     value = this->minMaxRange.formatValue(this->name, value); // format value to account for min and max values
     value = map(value, this->minMaxRange.getMinValue(), this->minMaxRange.getMaxValue(), 0, 100); // map value to 0-100 range
-    Serial.println(this->name + " value: " + String(value) + "%"); // print value
+    Serial.println(this->name + " value: " + String(value) + "%"); // print value to serial monitor
     return String(value) + "%";
 }
 

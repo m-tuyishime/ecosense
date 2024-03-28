@@ -2,7 +2,7 @@
 
 // constructor
 AirHumiditySensor::AirHumiditySensor(byte pin, Range<byte> critPercRange) : 
-    DHT_Mod(pin, "Air Temperature", "AIR_T", Range<int>(0, 50), critPercRange) {} // sets all properties in Sensor parent class
+    DHT_Mod(pin, "Air Temperature", "AIR_H", Range<int>(0, 50), critPercRange) {} // sets all properties in Sensor parent class
 
 // read from sensor and return formatted value (%) as string
 String AirHumiditySensor::readSensor()
