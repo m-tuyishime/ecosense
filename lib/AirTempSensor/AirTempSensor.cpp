@@ -17,7 +17,7 @@ String AirTempSensor::readSensor()
         return "Error"; // return error message
     } else {
         Serial.println(this->name + " value: " + String(event.temperature) + "°C"); // print value to serial monitor
-        return String(event.temperature) + "°C"; // return value as string
+        return String((int) event.temperature) + "C"; // return value as string (without decimal points)
     }
 }
 
@@ -26,11 +26,13 @@ State AirTempSensor::isCritical()
 {
     sensors_event_t event; // create event
     DHT_Mod::sensor->temperature().getEvent(&event); // get temperature event
-    if (event.temperature < this->critPercRange.getMinValue()) // if value is below lowCritPerc
+    if (event.temperature < this->critPercRange.getMinValue()) { // if value is below lowCritPerc
+        Serial.println(this->name + " value (" + String(event.temperature) + "°C) is too low!"); // print value to serial monitor
         return State::TOO_LOW;
-    else if (event.temperature > this->critPercRange.getMaxValue()) // if value is above highCritPerc
+    } else if (event.temperature > this->critPercRange.getMaxValue()) { // if value is above highCritPerc
+        Serial.println(this->name + " value (" + String(event.temperature) + "°C) is too high!"); // print value to serial monitor
         return State::TOO_HIGH;
-    else
+    } else
         return State::NORMAL;
 }
 

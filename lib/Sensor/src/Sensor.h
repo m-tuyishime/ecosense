@@ -28,8 +28,8 @@ protected:
     Range<byte> critPercRange; // low and high critical percentage range
     Sensor(byte pin, String name, String shortName, Range<int> minMaxRange, Range<byte> critPercRange); // protected constructor (not to be used directly)
 public:
-    String readSensor(); // read from sensor and return formatted value (% | °C) as string
-    State isCritical(); // check if value is outside of range (TOO_LOW, TOO_HIGH, NORMAL)
+    virtual String readSensor(); // read from sensor and return formatted value (% | °C) as string
+    virtual State isCritical(); // check if value is outside of range (TOO_LOW, TOO_HIGH, NORMAL)
     StringArray2 getCritMessages(); // return 2 messages for LCD rows
 };
 
