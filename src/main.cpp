@@ -7,7 +7,7 @@
 // Hardware definitions
 
 // Arduino Uno R3
-// DHT22                            - on A3
+// DHT11                            - on D2
 // KY-018 photoresistor             - on A0
 // LCD 16X2 I2C                     - on SDA, SCL
 /***********************************************************************************/
@@ -23,8 +23,8 @@
 /***********************************************************************************/
 // Constant definitions
 
-#define LIGHT_C 0
-#define SOIL_C 5
+#define LIGHT_C A0
+#define SOIL_C A5
 #define DHT_C 2
 /***********************************************************************************/
 // Global variables
@@ -40,10 +40,12 @@ System* arduino; // system object
 
 void setup() {
     Serial.begin(9600); // start serial communication
+    pinMode(DHT_C, INPUT); // set DHT11 pin as input
+    
     lcd = new LCD(); // initialize LCD
     airTempSensor = new AirTempSensor(DHT_C, Range<byte>(20, 30)); // initialize air temperature sensor with critical temperature value range of 20-30°C
-    airHumiditySensor = new AirHumiditySensor(DHT_C, Range<byte>(20, 80)); // initialize air humidity sensor with critical value percentage range of 20-80% 
-    lightSensor = new LightSensor(LIGHT_C, Range<byte>(50, 100)); // initialize light sensor with critical value percentage range of 50-100%
+    airHumiditySensor = new AirHumiditySensor(DHT_C, Range<byte>(20, 80)); // initialize air humidity sensor with critical humidity percentage range of 20-80% 
+    lightSensor = new LightSensor(LIGHT_C, Range<byte>(50, 100)); // initialize light sensor with critical light percentage range of 50-100%
 
     arduino = new System(lcd, lightSensor, airHumiditySensor, airTempSensor); // initialize system object
 }

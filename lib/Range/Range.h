@@ -30,11 +30,6 @@ public:
         return value;
     }
 
-    // check if value is within range
-    bool isInRange(T value) {
-        return (value >= this->minValue && value <= this->maxValue); // return true if value is within range
-    }
-
     T getMinValue() {
         return this->minValue; // return min value
     }
